@@ -28,22 +28,24 @@ export function SetupChart({ data }: Props) {
   const top = data.slice(0, 8)
 
   return (
-    <div className="glass-card rounded-2xl p-5 h-64">
-      <p className="text-sm font-semibold text-slate-300 mb-4">Setup Performance</p>
-      <ResponsiveContainer width="100%" height="85%">
-        <BarChart data={top} layout="vertical" margin={{ top: 0, right: 4, bottom: 0, left: 30 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-          <XAxis type="number" tick={{ fill: '#64748b', fontSize: 10 }} tickLine={false} axisLine={false}
-            tickFormatter={v => `$${v}`} />
-          <YAxis type="category" dataKey="setup" tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} width={80} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
-          <Bar dataKey="profit" radius={[0, 4, 4, 0]}>
-            {top.map((entry, i) => (
-              <Cell key={i} fill={entry.profit >= 0 ? '#8b5cf6' : '#ef4444'} opacity={0.85} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="glass-card rounded-2xl p-5 h-72 flex flex-col">
+      <p className="text-sm font-semibold text-slate-300 mb-4 shrink-0">Setup Performance</p>
+      <div className="flex-1 min-h-0">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={top} layout="vertical" margin={{ top: 0, right: 4, bottom: 0, left: 30 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+            <XAxis type="number" tick={{ fill: '#64748b', fontSize: 10 }} tickLine={false} axisLine={false}
+              tickFormatter={v => `$${v}`} />
+            <YAxis type="category" dataKey="setup" tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} width={80} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+            <Bar dataKey="profit" radius={[0, 4, 4, 0]}>
+              {top.map((entry, i) => (
+                <Cell key={i} fill={entry.profit >= 0 ? '#8b5cf6' : '#ef4444'} opacity={0.85} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }

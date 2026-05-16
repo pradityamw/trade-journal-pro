@@ -54,42 +54,59 @@ export function DailyTradesModal({ date, onClose }: Props) {
               <p className="text-slate-400">Tidak ada trade di tanggal ini.</p>
             </div>
           ) : (
-            trades.map(trade => (
-              <div key={trade.id} className="glass-card rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <>
+              {/* Summary */}
+              <div className="flex items-center justify-between p-4 mb-2 bg-white/5 border border-white/10 rounded-xl">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-white text-base">{trade.pair}</span>
-                    <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-md', trade.direction === 'BUY' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400')}>
-                      {trade.direction}
-                    </span>
-                    <span className={cn('text-[10px] font-semibold px-2 py-0.5 rounded-md', {
-                      'bg-emerald-500/15 text-emerald-400': trade.status === 'WIN',
-                      'bg-red-500/15 text-red-400': trade.status === 'LOSS',
-                      'bg-slate-500/15 text-slate-400': trade.status === 'BREAKEVEN',
-                    })}>
-                      {trade.status}
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 flex items-center gap-2">
-                    <span>Entry: <span className="font-mono-num text-slate-300">{trade.entryPrice.toFixed(5)}</span></span>
-                    <span>•</span>
-                    <span>Lot: <span className="font-mono-num text-slate-300">{trade.lotSize}</span></span>
-                    {trade.setup && (
-                      <>
-                        <span>•</span>
-                        <span className="text-sky-400">{trade.setup}</span>
-                      </>
-                    )}
-                  </div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Total Trades</p>
+                  <p className="text-xl font-black text-white font-mono-num">{trades.length}</p>
                 </div>
                 <div className="text-right">
-                  <p className={cn('text-lg font-bold font-mono-num', getPLColor(trade.profitLoss))}>
-                    {formatCurrency(trade.profitLoss)}
+                  <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Total P&L</p>
+                  <p className={cn('text-xl font-black font-mono-num', getPLColor(trades.reduce((sum, t) => sum + t.profitLoss, 0)))}>
+                    {formatCurrency(trades.reduce((sum, t) => sum + t.profitLoss, 0))}
                   </p>
-                  <p className="text-xs text-slate-400 font-mono-num">R:R {trade.rrRatio.toFixed(2)}</p>
                 </div>
               </div>
-            ))
+
+              {/* Trade List */}
+              {trades.map(trade => (
+                <div key={trade.id} className="glass-card rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-white text-base">{trade.pair}</span>
+                      <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-md', trade.direction === 'BUY' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400')}>
+                        {trade.direction}
+                      </span>
+                      <span className={cn('text-[10px] font-semibold px-2 py-0.5 rounded-md', {
+                        'bg-emerald-500/15 text-emerald-400': trade.status === 'WIN',
+                        'bg-red-500/15 text-red-400': trade.status === 'LOSS',
+                        'bg-slate-500/15 text-slate-400': trade.status === 'BREAKEVEN',
+                      })}>
+                        {trade.status}
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-400 flex items-center gap-2">
+                      <span>Entry: <span className="font-mono-num text-slate-300">{trade.entryPrice.toFixed(5)}</span></span>
+                      <span>•</span>
+                      <span>Lot: <span className="font-mono-num text-slate-300">{trade.lotSize}</span></span>
+                      {trade.setup && (
+                        <>
+                          <span>•</span>
+                          <span className="text-sky-400">{trade.setup}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={cn('text-lg font-bold font-mono-num', getPLColor(trade.profitLoss))}>
+                      {formatCurrency(trade.profitLoss)}
+                    </p>
+                    <p className="text-xs text-slate-400 font-mono-num">R:R {trade.rrRatio.toFixed(2)}</p>
+                  </div>
+                </div>
+              ))}
+            </>
           )}
         </div>
       </div>

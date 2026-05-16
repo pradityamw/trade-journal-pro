@@ -210,6 +210,9 @@ export function ChartReviewModal({ trade, onClose, onSuccess }: Props) {
                   onMouseDown={handleMouseDown}
                   onMousemove={handleMouseMove}
                   onMouseup={handleMouseUp}
+                  onTouchStart={handleMouseDown}
+                  onTouchMove={handleMouseMove}
+                  onTouchEnd={handleMouseUp}
                   className="bg-black"
                 >
                   <Layer>
