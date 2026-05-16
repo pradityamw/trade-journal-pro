@@ -70,9 +70,9 @@ export function AICoach() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:h-[calc(100vh-8rem)]">
       {/* Chat Area */}
-      <div className="lg:col-span-2 flex flex-col glass-card rounded-2xl overflow-hidden border border-white/5 shadow-2xl relative">
+      <div className="lg:col-span-2 flex flex-col glass-card rounded-2xl overflow-hidden border border-white/5 shadow-2xl relative h-[calc(100vh-12rem)] lg:h-auto">
         <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-violet-500/5 pointer-events-none" />
         
         {/* Chat Header */}
