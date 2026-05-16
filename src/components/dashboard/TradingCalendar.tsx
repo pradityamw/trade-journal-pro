@@ -76,15 +76,15 @@ export function TradingCalendar({ data, onDateClick }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 mb-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
         {weekDays.map((day) => (
-          <div key={day} className="text-center text-xs font-semibold text-slate-400 py-2">
+          <div key={day} className="text-center text-[10px] sm:text-xs font-semibold text-slate-400 py-2">
             {day}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2">
         {days.map((day, idx) => {
           const isProfitable = day.profit > 0
           const isLoss = day.profit < 0
@@ -95,7 +95,7 @@ export function TradingCalendar({ data, onDateClick }: Props) {
               key={idx}
               onClick={() => onDateClick?.(day.dateStr)}
               className={`
-                min-h-[80px] p-2 rounded-xl flex flex-col justify-between border transition-all duration-200
+                min-h-[60px] sm:min-h-[80px] p-1 sm:p-2 rounded-xl flex flex-col justify-between border transition-all duration-200
                 ${onDateClick ? 'cursor-pointer' : ''}
                 ${day.isCurrentMonth ? 'bg-white/5' : 'bg-white/5 opacity-40'}
                 ${day.isToday ? 'border-sky-500/50 glow-blue' : 'border-white/5'}
@@ -106,27 +106,27 @@ export function TradingCalendar({ data, onDateClick }: Props) {
               `}
             >
               <div className="flex justify-between items-start">
-                <span className={`text-sm font-semibold ${day.isToday ? 'text-sky-400' : 'text-slate-300'}`}>
+                <span className={`text-xs sm:text-sm font-semibold ${day.isToday ? 'text-sky-400' : 'text-slate-300'}`}>
                   {format(day.date, 'd')}
                 </span>
                 {hasTrades && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/10 text-slate-300">
+                  <span className="text-[8px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded-md bg-white/10 text-slate-300">
                     {day.trades}
                   </span>
                 )}
               </div>
               
-              <div className="mt-2 text-right">
+              <div className="mt-1 sm:mt-2 text-right">
                 {hasTrades ? (
                   <span
-                    className={`text-xs font-bold font-mono-num ${
+                    className={`text-[9px] sm:text-xs font-bold font-mono-num block truncate ${
                       isProfitable ? 'text-emerald-400' : isLoss ? 'text-red-400' : 'text-slate-400'
                     }`}
                   >
                     {isProfitable ? '+' : ''}{formatCurrency(day.profit)}
                   </span>
                 ) : (
-                  <span className="text-xs text-slate-600">-</span>
+                  <span className="text-[10px] sm:text-xs text-slate-600">-</span>
                 )}
               </div>
             </div>

@@ -118,72 +118,82 @@ export function ChartReviewModal({ trade, onClose, onSuccess }: Props) {
       <div className="relative w-full max-w-6xl h-[90vh] flex flex-col glass-card rounded-2xl shadow-2xl border border-white/10 animate-fade-in overflow-hidden">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[hsl(222_47%_7%)]">
-          <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              Chart Review: {trade.pair} <span className="text-sm font-normal text-slate-400">({trade.direction})</span>
+        <div className="flex items-center justify-between px-4 py-3 lg:px-6 lg:py-4 border-b border-white/5 bg-[hsl(222_47%_7%)]">
+          <div className="min-w-0 pr-2">
+            <h2 className="text-sm lg:text-lg font-bold text-white flex flex-wrap items-baseline gap-1 lg:gap-2 truncate">
+              <span className="hidden sm:inline">Chart Review:</span> {trade.pair} <span className="text-xs lg:text-sm font-normal text-slate-400">({trade.direction})</span>
             </h2>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={handleSave} disabled={isLoading} className="flex items-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50">
-              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Simpan Anotasi
+          <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+            <button onClick={handleSave} disabled={isLoading} className="flex items-center gap-1.5 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-xs lg:text-sm font-semibold transition-colors disabled:opacity-50 whitespace-nowrap">
+              {isLoading ? <Loader2 size={14} className="animate-spin lg:w-4 lg:h-4" /> : <Save size={14} className="lg:w-4 lg:h-4" />} 
+              <span className="hidden sm:inline">Simpan Anotasi</span>
+              <span className="sm:hidden">Simpan</span>
             </button>
-            <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 text-slate-400 transition-colors"><X size={20} /></button>
+            <button onClick={onClose} className="p-1.5 lg:p-2 rounded-lg hover:bg-white/10 text-slate-400 transition-colors"><X size={18} className="lg:w-5 lg:h-5" /></button>
           </div>
         </div>
 
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-64 border-r border-white/5 bg-black/20 p-4 flex flex-col gap-6 overflow-y-auto">
-            <div>
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Tampilan Chart</h3>
-              <div className="flex flex-col gap-2">
-                <button 
-                  onClick={() => setActiveTab('before')}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium text-left transition-all ${activeTab === 'before' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-transparent'}`}
-                >
-                  Before Entry (Setup)
-                </button>
-                <button 
-                  onClick={() => setActiveTab('after')}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium text-left transition-all ${activeTab === 'after' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-transparent'}`}
-                >
-                  After Exit (Result)
-                </button>
+          <div className="w-full lg:w-64 lg:border-r border-b lg:border-b-0 border-white/5 bg-black/20 p-4 flex flex-col gap-4 lg:gap-6 overflow-y-auto shrink-0 max-h-[40vh] lg:max-h-full">
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-6">
+              <div>
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 lg:mb-3">Tampilan Chart</h3>
+                <div className="flex flex-col gap-2">
+                  <button 
+                    onClick={() => setActiveTab('before')}
+                    className={`px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm font-medium text-left transition-all ${activeTab === 'before' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-transparent'}`}
+                  >
+                    Before Entry
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('after')}
+                    className={`px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm font-medium text-left transition-all ${activeTab === 'after' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-transparent'}`}
+                  >
+                    After Exit
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 lg:mb-3">Markup Tools</h3>
+                <div className="grid grid-cols-4 lg:grid-cols-2 gap-2">
+                  <button onClick={() => setTool('cursor')} className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-xl border transition-all ${tool === 'cursor' ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
+                    <MousePointer2 size={16} className="mb-1 lg:w-5 lg:h-5" /> <span className="text-[10px]">Select</span>
+                  </button>
+                  <button onClick={() => setTool('rect')} className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-xl border transition-all ${tool === 'rect' ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
+                    <Square size={16} className="mb-1 lg:w-5 lg:h-5" /> <span className="text-[10px]">Zone</span>
+                  </button>
+                  <button onClick={() => setTool('pen')} className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-xl border transition-all ${tool === 'pen' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
+                    <PenTool size={16} className="mb-1 lg:w-5 lg:h-5" /> <span className="text-[10px]">Draw</span>
+                  </button>
+                  <button onClick={() => setTool('text')} className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-xl border transition-all ${tool === 'text' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
+                    <Type size={16} className="mb-1 lg:w-5 lg:h-5" /> <span className="text-[10px]">Text</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div>
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Markup Tools</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => setTool('cursor')} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${tool === 'cursor' ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
-                  <MousePointer2 size={20} className="mb-1" /> <span className="text-[10px]">Select</span>
-                </button>
-                <button onClick={() => setTool('rect')} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${tool === 'rect' ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
-                  <Square size={20} className="mb-1" /> <span className="text-[10px]">Zone</span>
-                </button>
-                <button onClick={() => setTool('pen')} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${tool === 'pen' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
-                  <PenTool size={20} className="mb-1" /> <span className="text-[10px]">Draw</span>
-                </button>
-                <button onClick={() => setTool('text')} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${tool === 'text' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}>
-                  <Type size={20} className="mb-1" /> <span className="text-[10px]">Text</span>
-                </button>
-              </div>
-              <button onClick={() => setElements([])} className="w-full mt-2 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-medium transition-colors">
-                Clear All
+            <div className="mt-auto hidden lg:block">
+              <button onClick={() => setElements([])} className="w-full mb-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-medium transition-colors">
+                Clear All Markups
               </button>
-            </div>
-
-            <div className="mt-auto">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Trade Notes</h3>
               <p className="text-sm text-slate-300 p-3 bg-white/5 rounded-xl border border-white/5 italic">
                 {trade.notes || 'Tidak ada catatan.'}
               </p>
             </div>
+
+            <div className="lg:hidden flex gap-2">
+              <button onClick={() => setElements([])} className="flex-1 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-medium transition-colors">
+                Clear All
+              </button>
+            </div>
           </div>
 
           {/* Canvas Area */}
-          <div className="flex-1 bg-[hsl(222_47%_5%)] relative overflow-hidden flex items-center justify-center p-4">
+          <div className="flex-1 bg-[hsl(222_47%_5%)] relative overflow-auto flex items-center justify-center p-4">
             {!imageUrl ? (
               <div className="text-center p-8">
                 <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
@@ -193,14 +203,14 @@ export function ChartReviewModal({ trade, onClose, onSuccess }: Props) {
                 <p className="text-slate-400">Anda belum mengunggah screenshot untuk tahap ini.</p>
               </div>
             ) : (
-              <div className="w-full h-full relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black/50">
+              <div className="relative rounded-xl border border-white/10 shadow-2xl bg-black/50 overflow-auto max-w-full max-h-full">
                 <Stage
                   width={800} // Set fixed width/height for simplicity, or use resize observer in production
                   height={600}
                   onMouseDown={handleMouseDown}
                   onMousemove={handleMouseMove}
                   onMouseup={handleMouseUp}
-                  className="w-full h-full flex items-center justify-center"
+                  className="bg-black"
                 >
                   <Layer>
                     {image && (

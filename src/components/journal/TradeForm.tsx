@@ -194,8 +194,8 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
             </div>
           </div>
 
-          {/* Row 3: Lot, Risk, RR, P&L */}
-          <div className="grid grid-cols-4 gap-4">
+          {/* Row 3: Pair, Type, RR, P&L */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <label className={labelClass}>Lot Size *</label>
               <input type="number" step="0.01" {...register('lotSize')} className={fieldClass} placeholder="0.10" />
@@ -219,7 +219,7 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
           </div>
 
           {/* Row 4: Session, Emotion, Setup, Status */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <label className={labelClass}>Sesi Trading *</label>
               <select {...register('session')} className={fieldClass}>
@@ -254,7 +254,7 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
           </div>
 
           {/* Screenshot */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>Before Entry (Setup)</label>
               {screenshotUrl ? (
