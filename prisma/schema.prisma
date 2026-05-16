@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  image         String?
+  imagePublicId String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  trades        Trade[]
+  settings      Settings?
+
+  @@map("users")
+}
+
+model Trade {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  pair          String
+  direction     Direction
+  entryPrice    Float
+  stopLoss      Float
+  takeProfit    Float
+  lotSize       Float
+  riskPercent   Float
+  profitLoss    Float
+  rrRatio       Float
+  session       Session
+  emotion       Emotion
+  notes         String?
+  setup         String?
+  screenshotUrl       String?
+  screenshotId        String?
+  screenshotAfterUrl  String?
+  screenshotAfterId   String?
+  markupData          String?
+  tradeDate           DateTime
+  status        TradeStatus
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tradeDate])
+  @@index([pair])
+  @@map("trades")
+}
+
+model Settings {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  monthlyTarget  Float   @default(1000)
+  riskPreference Float   @default(1)
+  currency       String  @default("USD")
+  theme          String  @default("dark")
+
+  @@map("settings")
+}
+
+enum Direction {
+  BUY
+  SELL
+}
+
+enum Session {
+  LONDON
+  NEW_YORK
+  TOKYO
+  SYDNEY
+  OVERLAP
+}
+
+enum Emotion {
+  CALM
+  FEAR
+  GREED
+  REVENGE
+  CONFIDENT
+  FOMO
+}
+
+enum TradeStatus {
+  WIN
+  LOSS
+  BREAKEVEN
+}
