@@ -142,7 +142,8 @@ export function SessionHeatmap({ data }: Props) {
                         {/* Tooltip */}
                         {cell.trades > 0 && (
                           <div className={cn(
-                            "absolute bottom-full mb-2 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none",
+                            "absolute w-48 p-3 bg-slate-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none",
+                            session === SESSIONS[0] ? "top-full mt-2" : "bottom-full mb-2",
                             day.id === 1 ? "left-0" : day.id === 5 ? "right-0" : "left-1/2 -translate-x-1/2"
                           )}>
                             <p className="text-xs font-bold text-white mb-2">{SESSION_LABELS[session as keyof typeof SESSION_LABELS]} - {day.label}</p>
