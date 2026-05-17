@@ -49,6 +49,7 @@ model Trade {
   screenshotAfterUrl  String?
   screenshotAfterId   String?
   markupData          String?
+  aiFeedback          String?  @db.Text
   tradeDate           DateTime
   status        TradeStatus
 

@@ -36,6 +36,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         screenshotAfterUrl: parsed.data.screenshotAfterUrl ?? null,
         screenshotAfterId: parsed.data.screenshotAfterId ?? null,
         markupData: parsed.data.markupData ?? null,
+        aiFeedback: parsed.data.aiFeedback ?? null,
       },
     })
 

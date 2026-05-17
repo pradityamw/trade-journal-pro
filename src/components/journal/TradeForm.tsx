@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { X, Loader2, Upload, Trash2 } from 'lucide-react'
+import { X, Loader2, Upload, Trash2, Sparkles } from 'lucide-react'
 import { tradeSchema, TradeInput } from '@/lib/validations'
 import { Trade } from '@/types'
 import { TRADING_PAIRS, SESSION_LABELS, EMOTION_LABELS } from '@/utils/formatters'
@@ -24,8 +24,9 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
   const [screenshotId, setScreenshotId] = useState(trade?.screenshotId ?? '')
   const [screenshotAfterUrl, setScreenshotAfterUrl] = useState(trade?.screenshotAfterUrl ?? '')
   const [screenshotAfterId, setScreenshotAfterId] = useState(trade?.screenshotAfterId ?? '')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<TradeInput>({
+  const { register, handleSubmit, watch, setValue, getValues, formState: { errors } } = useForm<TradeInput>({
     resolver: zodResolver(tradeSchema) as any,
     defaultValues: trade ? {
       ...trade,
@@ -45,6 +46,7 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
   const entryPrice = watch('entryPrice')
   const stopLoss = watch('stopLoss')
   const takeProfit = watch('takeProfit')
+  const aiFeedback = watch('aiFeedback')
 
   useEffect(() => {
     if (profitLoss !== undefined && profitLoss !== null) {
@@ -134,6 +136,34 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
       } else toast.error('Gagal menyimpan trade')
     } catch { toast.error('Terjadi kesalahan') }
     finally { setIsLoading(false) }
+  }
+
+  const handleAnalyzeAI = async () => {
+    if (!screenshotUrl && !screenshotAfterUrl) {
+      toast.error('Upload minimal satu gambar chart (Before/After) untuk dianalisa AI')
+      return
+    }
+    
+    setIsAnalyzing(true)
+    try {
+      const data = getValues()
+      const res = await fetch('/api/trades/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      const result = await res.json()
+      if (result.success) {
+        setValue('aiFeedback', result.data.feedback)
+        toast.success('Analisa AI berhasil didapatkan')
+      } else {
+        toast.error(result.error || 'Gagal menganalisa trade')
+      }
+    } catch {
+      toast.error('Terjadi kesalahan saat memanggil AI')
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   const fieldClass = "w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 text-sm [&>option]:bg-slate-900 [&>option]:text-white"
@@ -300,12 +330,42 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
             </div>
           </div>
 
+          {/* AI Coach Feedback */}
+          {(screenshotUrl || screenshotAfterUrl) && (
+            <div className="p-4 rounded-xl border border-sky-500/20 bg-sky-500/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sky-400 font-medium text-sm">
+                  <Sparkles size={16} />
+                  AI Coach Feedback
+                </div>
+                <button 
+                  type="button" 
+                  onClick={handleAnalyzeAI}
+                  disabled={isAnalyzing}
+                  className="px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 disabled:opacity-50 text-xs font-semibold transition-colors flex items-center gap-2"
+                >
+                  {isAnalyzing ? <><Loader2 size={12} className="animate-spin" /> Menganalisa...</> : '✨ Minta Analisa AI'}
+                </button>
+              </div>
+              
+              {aiFeedback ? (
+                <div className="text-sm text-slate-300 prose prose-invert max-w-none prose-p:leading-relaxed prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10">
+                  <div dangerouslySetInnerHTML={{ __html: aiFeedback.replace(/\n/g, '<br/>') }} />
+                </div>
+              ) : (
+                <p className="text-xs text-slate-500">
+                  Klik tombol di atas untuk mendapatkan feedback cerdas tentang trade ini berdasarkan gambar chart yang kamu upload.
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-colors">
               Batal
             </button>
-            <button type="submit" disabled={isLoading || uploadingBefore || uploadingAfter}
+            <button type="submit" disabled={isLoading || uploadingBefore || uploadingAfter || isAnalyzing}
               className="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2">
               {isLoading ? <><Loader2 size={15} className="animate-spin" /> Menyimpan...</> : (trade ? 'Update Trade' : 'Simpan Trade')}
             </button>

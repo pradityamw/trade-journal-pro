@@ -88,6 +88,7 @@ export async function POST(req: NextRequest) {
         screenshotAfterUrl: parsed.data.screenshotAfterUrl ?? null,
         screenshotAfterId: parsed.data.screenshotAfterId ?? null,
         markupData: parsed.data.markupData ?? null,
+        aiFeedback: parsed.data.aiFeedback ?? null,
       },
     })
 

@@ -34,6 +34,7 @@ export const tradeSchema = z.object({
   screenshotAfterUrl: z.string().url().optional().nullable(),
   screenshotAfterId: z.string().optional().nullable(),
   markupData: z.string().optional().nullable(),
+  aiFeedback: z.string().optional().nullable(),
   tradeDate: z.string().min(1, 'Tanggal wajib diisi'),
   status: z.enum(['WIN', 'LOSS', 'BREAKEVEN']),
 })
