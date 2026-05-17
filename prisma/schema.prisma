@@ -44,6 +44,7 @@ model Trade {
   emotion       Emotion
   notes         String?
   setup         String?
+  setupGrade    SetupGrade?
   screenshotUrl       String?
   screenshotId        String?
   screenshotAfterUrl  String?
@@ -101,4 +102,10 @@ enum TradeStatus {
   WIN
   LOSS
   BREAKEVEN
+}
+
+enum SetupGrade {
+  A
+  B
+  C
 }

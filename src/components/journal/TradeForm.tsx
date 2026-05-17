@@ -25,6 +25,14 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
   const [screenshotAfterUrl, setScreenshotAfterUrl] = useState(trade?.screenshotAfterUrl ?? '')
   const [screenshotAfterId, setScreenshotAfterId] = useState(trade?.screenshotAfterId ?? '')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [checklist, setChecklist] = useState({
+    trend: !!trade,
+    risk: !!trade,
+    confirmation: !!trade,
+    emotion: !!trade
+  })
+  
+  const isChecklistComplete = Object.values(checklist).every(Boolean)
 
   const { register, handleSubmit, watch, setValue, getValues, formState: { errors } } = useForm<TradeInput>({
     resolver: zodResolver(tradeSchema) as any,
@@ -248,8 +256,8 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
             </div>
           </div>
 
-          {/* Row 4: Session, Emotion, Setup, Status */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {/* Row 4: Session, Emotion, Setup, Grade, Status */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <div>
               <label className={labelClass}>Sesi Trading *</label>
               <select {...register('session')} className={fieldClass}>
@@ -263,9 +271,19 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
               </select>
             </div>
             <div>
-              <label className={labelClass}>Setup/Strategi</label>
+              <label className={labelClass}>Setup</label>
               <input type="text" {...register('setup')} className={fieldClass} placeholder="BOS, Breakout..." />
               {errors.setup && <p className={errorClass}>{errors.setup.message}</p>}
+            </div>
+            <div>
+              <label className={labelClass}>Grade</label>
+              <select {...register('setupGrade')} className={fieldClass}>
+                <option value="">-</option>
+                <option value="A">A (Tinggi)</option>
+                <option value="B">B (Sedang)</option>
+                <option value="C">C (Rendah)</option>
+              </select>
+              {errors.setupGrade && <p className={errorClass}>{errors.setupGrade.message}</p>}
             </div>
             <div>
               <label className={labelClass}>Status *</label>
@@ -360,12 +378,36 @@ export function TradeForm({ trade, onClose, onSuccess }: Props) {
             </div>
           )}
 
+          {/* Pre-Trade Checklist */}
+          <div className="p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+            <h3 className="text-sm font-semibold text-white">Pre-Trade Checklist</h3>
+            <p className="text-xs text-slate-400">Wajib centang semua sebelum menyimpan trade untuk melatih disiplin.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" checked={checklist.trend} onChange={(e) => setChecklist(p => ({...p, trend: e.target.checked}))} className="w-4 h-4 rounded border-white/20 bg-black/50 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-0" />
+                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Searah trend / Sesuai bias</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" checked={checklist.risk} onChange={(e) => setChecklist(p => ({...p, risk: e.target.checked}))} className="w-4 h-4 rounded border-white/20 bg-black/50 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-0" />
+                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Risk/Reward memadai</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" checked={checklist.confirmation} onChange={(e) => setChecklist(p => ({...p, confirmation: e.target.checked}))} className="w-4 h-4 rounded border-white/20 bg-black/50 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-0" />
+                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Ada konfirmasi entry yang jelas</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" checked={checklist.emotion} onChange={(e) => setChecklist(p => ({...p, emotion: e.target.checked}))} className="w-4 h-4 rounded border-white/20 bg-black/50 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-0" />
+                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">Emosi stabil / Tidak FOMO</span>
+              </label>
+            </div>
+          </div>
+
           {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-colors">
               Batal
             </button>
-            <button type="submit" disabled={isLoading || uploadingBefore || uploadingAfter || isAnalyzing}
+            <button type="submit" disabled={isLoading || uploadingBefore || uploadingAfter || isAnalyzing || !isChecklistComplete}
               className="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2">
               {isLoading ? <><Loader2 size={15} className="animate-spin" /> Menyimpan...</> : (trade ? 'Update Trade' : 'Simpan Trade')}
             </button>

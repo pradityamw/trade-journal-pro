@@ -29,6 +29,7 @@ export const tradeSchema = z.object({
   emotion: z.enum(['CALM', 'FEAR', 'GREED', 'REVENGE', 'CONFIDENT', 'FOMO']),
   notes: z.string().max(1000).optional().nullable(),
   setup: z.string().max(100).optional().nullable(),
+  setupGrade: z.enum(['A', 'B', 'C']).optional().nullable(),
   screenshotUrl: z.string().url().optional().nullable(),
   screenshotId: z.string().optional().nullable(),
   screenshotAfterUrl: z.string().url().optional().nullable(),

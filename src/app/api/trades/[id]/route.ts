@@ -31,6 +31,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         tradeDate: new Date(parsed.data.tradeDate),
         notes: parsed.data.notes ?? null,
         setup: parsed.data.setup ?? null,
+        setupGrade: parsed.data.setupGrade ?? null,
         screenshotUrl: parsed.data.screenshotUrl ?? null,
         screenshotId: parsed.data.screenshotId ?? null,
         screenshotAfterUrl: parsed.data.screenshotAfterUrl ?? null,
