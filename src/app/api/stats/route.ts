@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
-import { calculateStats, calculatePairPerformance, calculateSessionPerformance, buildEquityCurve, buildMonthlyData, calculateSetupPerformance, buildCalendarData, calculateSessionHeatmap } from '@/utils/calculations'
+import { calculateStats, calculatePairPerformance, calculateSessionPerformance, buildEquityCurve, buildMonthlyData, calculateSetupPerformance, buildCalendarData, calculateSessionHeatmap, calculateGradePerformance } from '@/utils/calculations'
 
 export async function GET() {
   try {
@@ -23,10 +23,11 @@ export async function GET() {
     const setupPerformance = calculateSetupPerformance(trades as any)
     const calendarData = buildCalendarData(trades as any)
     const heatmapData = calculateSessionHeatmap(trades as any)
+    const gradePerformance = calculateGradePerformance(trades as any)
 
     return NextResponse.json({
       success: true,
-      data: { stats, equityCurve, monthlyData, pairPerformance, sessionPerformance, setupPerformance, calendarData, heatmapData },
+      data: { stats, equityCurve, monthlyData, pairPerformance, sessionPerformance, setupPerformance, calendarData, heatmapData, gradePerformance },
     })
   } catch (error) {
     console.error('[STATS_GET]', error)

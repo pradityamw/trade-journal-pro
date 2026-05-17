@@ -13,6 +13,8 @@ import { WinLossChart } from '@/components/dashboard/WinLossChart'
 import { MonthlyChart } from '@/components/dashboard/MonthlyChart'
 import { SessionChart } from '@/components/dashboard/SessionChart'
 import { PairChart } from '@/components/dashboard/PairChart'
+import { MarketContextCard } from '@/components/dashboard/MarketContextCard'
+import { SetupGradeChart } from '@/components/dashboard/SetupGradeChart'
 import { formatCurrency, formatPercent, formatRR } from '@/utils/formatters'
 import { DashboardStats } from '@/types'
 
@@ -22,6 +24,7 @@ interface StatsData {
   monthlyData: { month: string; profit: number; trades: number }[]
   pairPerformance: { pair: string; profit: number; trades: number; winRate: number }[]
   sessionPerformance: { session: string; profit: number; trades: number; winRate: number }[]
+  gradePerformance: import('@/utils/calculations').GradePerformance[]
 }
 
 export default function DashboardPage() {
@@ -142,6 +145,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Market Context */}
+      <MarketContextCard />
+
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
         {loading
@@ -182,10 +188,15 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Pair Performance */}
-      <div>
-        {loading ? <ChartSkeleton height="h-64" /> : (
-          <PairChart data={data?.pairPerformance ?? []} />
+      {/* Pair & Grade Performance */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {loading ? (
+          <><ChartSkeleton height="h-64" /><ChartSkeleton height="h-64" /></>
+        ) : (
+          <>
+            <PairChart data={data?.pairPerformance ?? []} />
+            <SetupGradeChart data={data?.gradePerformance ?? []} />
+          </>
         )}
       </div>
     </div>

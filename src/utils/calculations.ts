@@ -264,3 +264,36 @@ export function calculateSessionHeatmap(trades: Trade[]): import('@/types').Sess
 
   return result
 }
+
+export interface GradePerformance {
+  grade: string
+  profit: number
+  trades: number
+  winRate: number
+  avgRR: number
+}
+
+export function calculateGradePerformance(trades: Trade[]): GradePerformance[] {
+  const gradeMap = new Map<string, { profit: number; trades: number; wins: number; rrSum: number }>()
+
+  for (const t of trades) {
+    const grade = t.setupGrade || 'None'
+    const existing = gradeMap.get(grade) ?? { profit: 0, trades: 0, wins: 0, rrSum: 0 }
+    gradeMap.set(grade, {
+      profit: existing.profit + t.profitLoss,
+      trades: existing.trades + 1,
+      wins: existing.wins + (t.status === 'WIN' ? 1 : 0),
+      rrSum: existing.rrSum + t.rrRatio
+    })
+  }
+
+  return Array.from(gradeMap.entries())
+    .map(([grade, data]) => ({
+      grade,
+      profit: data.profit,
+      trades: data.trades,
+      winRate: (data.wins / data.trades) * 100,
+      avgRR: data.trades > 0 ? data.rrSum / data.trades : 0
+    }))
+    .sort((a, b) => a.grade.localeCompare(b.grade))
+}

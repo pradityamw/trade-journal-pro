@@ -16,6 +16,7 @@ export interface Trade {
   emotion: Emotion
   notes: string | null
   setup: string | null
+  setupGrade?: 'A' | 'B' | 'C' | null
   screenshotUrl: string | null
   screenshotId: string | null
   screenshotAfterUrl: string | null
